@@ -4,6 +4,7 @@ import os
 import sys
 import re
 import csv
+import datetime
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
@@ -20,29 +21,29 @@ def downloadData(url):
 
 # process data function
 def processData(data):
-     # parse csv
     lines = data.decode('utf-8').splitlines()
     reader = csv.reader(lines)
     
     total_hits = 0
     image_hits = 0
     browser_counts = {'Firefox': 0, 'Chrome': 0, 'IE': 0, 'Safari': 0}
+    hour_counts = {} 
     
     for row in reader:
         if len(row) < 3:
             continue
         
-        path = row[0]          # e.g., /images/test.jpg
-        datetime_str = row[1]  # e.g., 01/27/2014 03:26:04
-        user_agent = row[2]    # e.g., Mozilla/5.0 ... Firefox/34.0
+        path = row[0]          
+        datetime_str = row[1] 
+        user_agent = row[2]    
         
         total_hits += 1
         
-        # Part III: Check if it's an image
+        # check image
         if re.search(r'\.(jpg|gif|png)$', path, re.IGNORECASE):
             image_hits += 1
         
-        # Count browsers function
+        # count browsers
         if 'Firefox' in user_agent:
             browser_counts['Firefox'] += 1
         elif 'Chrome' in user_agent and 'Edge' not in user_agent:
@@ -51,16 +52,28 @@ def processData(data):
             browser_counts['IE'] += 1
         elif 'Safari' in user_agent and 'Chrome' not in user_agent:
             browser_counts['Safari'] += 1
+        
+        # EXTRA CREDIT: Extract hour and count
+        try:
+            dt = datetime.datetime.strptime(datetime_str, "%m/%d/%Y %H:%M:%S")
+            hour = dt.hour  
+            hour_counts[hour] = hour_counts.get(hour, 0) + 1
+        except ValueError:
+            pass  
     
-    # calculate and print results
+   # calculate and print results
     image_percentage = (image_hits / total_hits) * 100 if total_hits > 0 else 0
-    print(f"Total hits: {total_hits}")
-    print(f"Image hits: {image_hits}")
-    print(f"Percentage of image hits: {image_percentage:.2f}%")
-    print("Browser counts:")
-    for browser, count in browser_counts.items():
-        print(f"  {browser}: {count}")
-   
+    print(f"Image requests account for {image_percentage:.1f}% of all requests")
+    
+    most_popular = max(browser_counts, key=browser_counts.get)
+    print(f"The most popular browser is {most_popular}")
+    
+    # extra credit
+    print("\nHits by hour:")
+    sorted_hours = sorted(hour_counts.items(), key=lambda x: x[1], reverse=True)
+    for hour, count in sorted_hours:
+        print(f"Hour {hour:02d} has {count} hits")
+    
 
 # main function
 def main():
@@ -71,11 +84,5 @@ def main():
     data = downloadData(args.url)
     processData(data)
 
-
-# main entry point
 if __name__ == "__main__":
-    """Main entry point"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--url", help="http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv", type=str, required=True)
-    args = parser.parse_args()
-    main(args.url)
+    main()
