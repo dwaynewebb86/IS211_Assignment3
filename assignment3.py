@@ -20,8 +20,6 @@ def downloadData(url):
 def processData(data):
     print(data.decode('utf-8'))
 
-
-
 # main function
 def main():
     parser = argparse.ArgumentParser()
