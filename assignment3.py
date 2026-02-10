@@ -46,7 +46,7 @@ def processData(data):
         
         # EXTRA CREDIT: Extract hour and count
         try:
-            dt = datetime.datetime.strptime(datetime_str, "%m/%d/%Y %H:%M:%S")
+            dt = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
             hour = dt.hour  
             hour_counts[hour] = hour_counts.get(hour, 0) + 1
         except ValueError:
