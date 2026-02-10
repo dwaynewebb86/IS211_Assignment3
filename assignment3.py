@@ -1,16 +1,17 @@
+# import modules
 import argparse
 import os
 import sys
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
-
+# filename function
 def _filename_from_url(url: str) -> str:
     parsed = urlparse(url)
     name = os.path.basename(parsed.path)
     return name or "downloaded_file"
 
-
+# download function
 def download_file(url: str, dest_path: str) -> None:
     try:
         with urlopen(url) as response, open(dest_path, "wb") as out_f:
@@ -23,7 +24,7 @@ def download_file(url: str, dest_path: str) -> None:
     except Exception as exc:
         raise RuntimeError(f"Failed to download {url}: {exc}") from exc
 
-
+# main function
 def main(url: str) -> None:
     filename = _filename_from_url(url)
     dest_path = os.path.join(os.getcwd(), filename)
@@ -31,7 +32,7 @@ def main(url: str) -> None:
     download_file(url, dest_path)
     print("Download complete.")
 
-
+# main entry point
 if __name__ == "__main__":
     """Main entry point"""
     parser = argparse.ArgumentParser()
