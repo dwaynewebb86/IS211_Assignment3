@@ -11,10 +11,16 @@ def _filename_from_url(url: str) -> str:
     name = os.path.basename(parsed.path)
     return name or "downloaded_file"
 
-# download function
+# download data function
 def downloadData(url):
     with urlopen(url) as response:
         return response.read()
+
+# process data function
+def processData(data):
+    print(data.decode('utf-8'))
+
+
 
 # main function
 def main():
@@ -35,6 +41,6 @@ if __name__ == "__main__":
 
     # process data function
     with open(sys.argv[1], 'rt') as f:
-    reader = "http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv"(f)
+        reader = "http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv"(f)
     for row in reader:
         print(row)
