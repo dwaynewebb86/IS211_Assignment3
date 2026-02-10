@@ -1,18 +1,9 @@
 # import modules
 import argparse
-import os
-import sys
 import re
 import csv
 import datetime
-from urllib.parse import urlparse
 from urllib.request import urlopen
-
-# filename function
-def _filename_from_url(url: str) -> str:
-    parsed = urlparse(url)
-    name = os.path.basename(parsed.path)
-    return name or "downloaded_file"
 
 # download data function
 def downloadData(url):
