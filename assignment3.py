@@ -32,3 +32,9 @@ if __name__ == "__main__":
     parser.add_argument("--url", help="http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv", type=str, required=True)
     args = parser.parse_args()
     main(args.url)
+
+    # process data function
+    with open(sys.argv[1], 'rt') as f:
+    reader = "http://s3.amazonaws.com/cuny-is211-spring2015/weblog.csv"(f)
+    for row in reader:
+        print(row)
