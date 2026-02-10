@@ -12,25 +12,18 @@ def _filename_from_url(url: str) -> str:
     return name or "downloaded_file"
 
 # download function
-def download_file(url: str, dest_path: str) -> None:
-    try:
-        with urlopen(url) as response, open(dest_path, "wb") as out_f:
-            chunk_size = 1024 * 1024
-            while True:
-                chunk = response.read(chunk_size)
-                if not chunk:
-                    break
-                out_f.write(chunk)
-    except Exception as exc:
-        raise RuntimeError(f"Failed to download {url}: {exc}") from exc
+def downloadData(url):
+    with urlopen(url) as response:
+        return response.read()
 
 # main function
-def main(url: str) -> None:
-    filename = _filename_from_url(url)
-    dest_path = os.path.join(os.getcwd(), filename)
-    print(f"Downloading {url} -> {dest_path}")
-    download_file(url, dest_path)
-    print("Download complete.")
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--url", required=True)
+    args = parser.parse_args()
+    
+    data = downloadData(args.url)
+    processData(data)
 
 # main entry point
 if __name__ == "__main__":
